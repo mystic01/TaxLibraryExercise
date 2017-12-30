@@ -42,21 +42,26 @@ namespace TaxLibraryExercise
         public decimal Calculator(decimal income)
         {
             decimal taxResult = 0;
-            var taxPaid = 0;
+            var calculatedIncome = 0;
             foreach (var taxTable in _taxTableList)
             {
-                if (taxTable.UpperBound != null && income >= taxTable.UpperBound)
-                {
-                    taxResult += (taxTable.UpperBound.Value - taxPaid) * taxTable.Rate;
-                    taxPaid = taxTable.UpperBound.Value;
-                }
-                else
-                {
-                    taxResult += (income - taxPaid) * taxTable.Rate;
+                taxResult += GetIntervalValue(income, calculatedIncome, taxTable.UpperBound) * taxTable.Rate;
+
+                if (taxTable.UpperBound != null)
+                    calculatedIncome = taxTable.UpperBound.Value;
+
+                if (calculatedIncome >= income)
                     break;
-                }
             }
             return taxResult;
+        }
+
+        private decimal GetIntervalValue(decimal income, decimal calculatedIncome, int? upperBound)
+        {
+            if (upperBound != null && income >= upperBound.Value)
+                return upperBound.Value - calculatedIncome;
+            else
+                return income - calculatedIncome;
         }
     }
 }
