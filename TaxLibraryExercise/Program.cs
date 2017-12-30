@@ -14,7 +14,7 @@ namespace TaxLibraryExercise
 
         public static decimal GetTaxResult(decimal income)
         {
-            return new TaxCalculator().Calculator(income);
+            return TaxCalculator.Instance.Calculator(income);
         }
     }
 
@@ -33,8 +33,7 @@ namespace TaxLibraryExercise
     public class TaxCalculator
     {
         private List<TaxTable> _taxTableList = null;
-
-        public TaxCalculator()
+        private TaxCalculator()
         {
             //Load From files
             _taxTableList = new List<TaxTable>
@@ -46,6 +45,26 @@ namespace TaxLibraryExercise
                 new TaxTable(10310000, 0.4m),
                 new TaxTable(null, 0.5m),
             };
+        }
+
+        private static object _syncRoot = new object();
+        private static TaxCalculator _instance;
+        public static TaxCalculator Instance
+        {
+            get
+            {
+                if (_instance == null)
+                {
+                    lock (_syncRoot)
+                    {
+                        if (_instance == null)
+                        {
+                            _instance = new TaxCalculator();
+                        }
+                    }
+                }
+                return _instance;
+            }
         }
 
         public decimal Calculator(decimal income)
