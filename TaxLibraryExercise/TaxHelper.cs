@@ -4,7 +4,7 @@
     {
         public static decimal GetTaxResult(decimal income)
         {
-            return TaxCalculator.Instance.Calculator(income);
+            return TaxCalculator.Instance.Calculate(income);
         }
     }
 }
