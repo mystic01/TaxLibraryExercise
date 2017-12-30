@@ -39,7 +39,7 @@ namespace TaxLibraryExercise
             }
         }
 
-        public decimal Calculator(decimal income)
+        public decimal Calculate(decimal income)
         {
             decimal taxResult = 0;
             var calculatedIncome = 0;
